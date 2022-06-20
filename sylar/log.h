@@ -7,7 +7,8 @@
 #include <list>
 #include <sstream>
 #include <fstream>
-
+#include <vector>
+#include <ostream>
 namespace sylar{
 
 //日志事件
@@ -42,8 +43,20 @@ public:
 class LogFormatter{
 public:
     typedef std::shared_ptr<LogFormatter> ptr;
-    std::string format(LogEvent::ptr event);
+    LogFormatter(const std::string& pattern);
 
+    std::string format(LogEvent::ptr event);
+private:
+    class FormatItem{
+    public:
+        typedef std::shared_ptr<FormatItem> ptr;
+        virtual ~FormatItem(){};
+        virtual void format(std::ostream& os, LogEvent::ptr event) = 0;
+    };
+    void init();
+private:
+    std::string m_pattern;
+    std::vector<FormatItem::ptr> m_items; 
 }; 
 
 
@@ -101,8 +114,9 @@ public:
     typedef std::shared_ptr<FileLogAppender> ptr;
     FileLogAppender(const std::string& filename);
     void log(LogLevel::Level level, LogEvent::ptr event) override;
-
-    void reopen();
+    
+    //重新打开,文件打开返回true,
+    bool reopen();
 private:
     std::string m_filename;
     std::ofstream m_filestream;

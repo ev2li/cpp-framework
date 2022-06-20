@@ -1,5 +1,7 @@
 #include "log.h"
 #include <iostream>
+#include <utility>
+
 namespace sylar{
 
 Logger::Logger(const std::string& name):m_name(name){
@@ -53,7 +55,9 @@ FileLogAppender::FileLogAppender(const std::string& filename):m_filename(filenam
 }
 
 void FileLogAppender::log(LogLevel::Level level, LogEvent::ptr event){
-
+    if(level >= m_level){
+        m_filestream << m_formatter->format(event);
+    }
 }
 
 bool FileLogAppender::reopen(){
@@ -63,10 +67,33 @@ bool FileLogAppender::reopen(){
     m_filestream.open(m_filename);
     return !!m_filestream;
 }
-
+   
 void StdoutLogAppender::log(LogLevel::Level level, LogEvent::ptr event){
     if(level >= m_level){
-        std::cout << m_formatter.format(event);
+        std::cout << m_formatter->format(event);
+    }
+}
+
+LogFormatter::LogFormatter(const std::string& pattern):m_pattern(pattern){
+
+}
+
+
+std::string LogFormatter::format(LogEvent::ptr event){
+    std::stringstream ss;
+    for(auto& i : m_items){
+        i->format(ss, event);
+    }
+    return ss.str();
+}
+
+void LogFormatter::init(){
+    std::vector<std::pair<std::string, int>> vec;
+    size_t last_pos = 0;
+    for(size_t i = 0; i < m_pattern.size(); ++i){
+        if(m_pattern[i] == "%"){
+            
+        }
     }
 }
 
