@@ -86,7 +86,7 @@ public:
     LogLevel::Level getLevel() const { return m_level;}
     void setLevel(LogLevel::Level val) { m_level = val;}
 protected:
-    LogLevel::Level m_level;
+    LogLevel::Level m_level = LogLevel::DEBUG;
     LogFormatter::ptr m_formatter;
 };
 
