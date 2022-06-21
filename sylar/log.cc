@@ -1,3 +1,4 @@
+
 #include "log.h"
 #include <iostream>
 #include <tuple>
@@ -124,12 +125,26 @@ private:
     std::string m_string;
 };
 
-Logger::Logger(const std::string& name):m_name(name){
+
+LogEvent::LogEvent(const char* file, int32_t line, uint32_t elapse, uint32_t thread_id, uint32_t fiber_id, uint64_t time):
+    m_file(file),
+    m_line(line),
+    m_elapse(elapse),
+    m_threadId(thread_id),
+    m_fiberId(fiber_id),
+    m_time(time){
 
 }
 
+Logger::Logger(const std::string& name):m_name(name),m_level(LogLevel::DEBUG){
+    m_formatter.reset(new LogFormatter("%d [%p] %f %l %m %n"));
+}
+
 void Logger::addAppender(LogAppender::ptr appender){
-   m_appenders.push_back(appender);
+    if(!appender->getFormatter()){
+        appender->setFormatter(m_formatter);
+    }
+    m_appenders.push_back(appender);
 }
 
 void Logger::delAppender(LogAppender::ptr appender){
