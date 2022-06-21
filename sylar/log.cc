@@ -235,7 +235,7 @@ void LogFormatter::init(){
     std::vector<std::tuple<std::string,  std::string, int>> vec;
     std::string nstr;
     for(size_t i = 0; i < m_pattern.size(); ++i){
-        if(m_pattern[i] == '%'){
+        if(m_pattern[i] != '%'){
             nstr.append(1, m_pattern[i]);
             continue;
         }
@@ -253,7 +253,8 @@ void LogFormatter::init(){
         std::string str;
         std::string fmt;
         while(n < m_pattern.size()){
-            if(!isalpha(m_pattern[n]) && m_pattern[n] != '{' && m_pattern[n] != '}'){
+            if(!fmt_status && (!isalpha(m_pattern[n]) && m_pattern[n] != '{' && m_pattern[n] != '}')){
+                str = m_pattern.substr(i + 1, n - i - 1);
                 break;
             }
 
@@ -261,16 +262,15 @@ void LogFormatter::init(){
                 if (m_pattern[n] == '{'){
                     str = m_pattern.substr(i + 1, n - i - 1);
                     fmt_status = 1;//解析格式
-                    ++n;
                     fmt_begin = n;
+                    ++n;
                     continue;
                 }
-            }
-
-            if(fmt_status == 1) {
+            }else if(fmt_status == 1) {
                 if (m_pattern[n] == '}'){
-                    fmt = m_pattern.substr(fmt_begin+1, n - fmt_begin);
-                    fmt_status = 2;
+                    fmt = m_pattern.substr(fmt_begin+1, n - fmt_begin - 1);
+                    fmt_status = 0;
+                    ++n;
                     break;
                 }
             }
