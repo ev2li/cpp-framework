@@ -78,9 +78,9 @@ public:
 
 class DateTimeFormatItem : public LogFormatter::FormatItem{
 public:
-    DateTimeFormatItem(const std::string& format = "%Y-%m-%d %H:%M:%s"):m_format(format){
+    DateTimeFormatItem(const std::string& format = "%Y-%m-%d %H:%M:%S"):m_format(format){
         if(m_format.empty()){
-            m_format = "%Y-%m-%d %H:%M:%s";
+            m_format = "%Y-%m-%d %H:%M:%S";
         }
     }
 
@@ -275,26 +275,23 @@ void LogFormatter::init(){
                 }
             }
             ++n;
+            if(n == m_pattern.size()) {
+                if(str.empty()) {
+                    str = m_pattern.substr(i + 1);
+                }
+            }            
         }
 
         if(fmt_status == 0){
             if(!nstr.empty()){
-                vec.push_back(std::make_tuple(nstr, "", 0));
+                vec.push_back(std::make_tuple(nstr, std::string(), 0));
                 nstr.clear();
             }
-            str = m_pattern.substr(i + 1, n - i -1);
             vec.push_back(std::make_tuple(str, fmt, 1));
             i = n - 1;
         }else if(fmt_status == 1){
             std::cout << "pattern parse error:" << m_pattern << " -" << m_pattern.substr(i) << std::endl;
             vec.push_back(std::make_tuple("<<pattern>_error>", fmt, 0));
-        }else if(fmt_status == 2){
-            if(!nstr.empty()){
-                 vec.push_back(std::make_tuple(nstr, "", 0));
-                 nstr.clear();
-            }
-            vec.push_back(std::make_tuple(str, fmt, 1));
-            i = n - 1;
         }
     }
 
