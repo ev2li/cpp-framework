@@ -27,6 +27,34 @@ const char* LogLevel::ToString(LogLevel::Level level){
     return "UNKONW";
 }
 
+LogEventWrap::LogEventWrap(LogEvent::ptr e):m_event(e){
+      
+}
+
+LogEventWrap::~LogEventWrap(){
+    m_event->getLogger()->log(m_event->getLevel(), m_event);
+}
+
+void LogEvent::format(const char* fmt, ...){
+    va_list al;
+    va_start(al, fmt);
+    format(fmt, al);
+    va_end(al);
+}
+
+void LogEvent::format(const char* fmt, va_list al){
+    char* buf = nullptr;
+    int len = vasprintf(&buf, fmt, al);
+    if(len != -1){
+        m_ss << std::string(buf, len);
+        free(buf);
+    }
+}
+
+std::stringstream& LogEventWrap::getSS(){
+    return m_event->getSS();
+}
+
 class MessageFormatItem : public LogFormatter::FormatItem{
 public:
     MessageFormatItem(const std::string& str = "") {}
@@ -132,19 +160,30 @@ private:
     std::string m_string;
 };
 
+class TabFormatItem : public LogFormatter::FormatItem{
+public:
+    TabFormatItem(const std::string& str = ""){}
+    void format(std::ostream& os, std::shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) override {
+        os << m_string; 
+    }
+private:
+    std::string m_string;
+};
 
-LogEvent::LogEvent(const char* file, int32_t line, uint32_t elapse, uint32_t thread_id, uint32_t fiber_id, uint64_t time):
+LogEvent::LogEvent(std::shared_ptr<Logger> logger, LogLevel::Level level, const char* file, int32_t line, uint32_t elapse, uint32_t thread_id, uint32_t fiber_id, uint64_t time):
     m_file(file),
     m_line(line),
     m_elapse(elapse),
     m_threadId(thread_id),
     m_fiberId(fiber_id),
-    m_time(time){
- 
+    m_time(time),
+    m_logger(logger),
+    m_level(level){
+  
 }
 
 Logger::Logger(const std::string& name):m_name(name),m_level(LogLevel::DEBUG){
-    m_formatter.reset(new LogFormatter("%d [%p] <%f:%l> %m %n"));
+    m_formatter.reset(new LogFormatter("%d{%Y-%m-%d %H:%M:%S}%T%t%T%F%T[%p]%T[%c]%T%f:%l%T%m%n"));
 }
 
 void Logger::addAppender(LogAppender::ptr appender){
@@ -303,15 +342,17 @@ void LogFormatter::init(){
 #define XX(str, C) \
         {#str, [](const std::string &fmt){ return FormatItem::ptr(new C(fmt));}}
 
-        XX(m, MessageFormatItem),
-        XX(p, LevelFormatItem),
-        XX(r, ElapseFormatItem),
-        XX(e, NameFormatItem),
-        XX(t, ThreadIdFormatItem),
-        XX(n, NewLineFormatItem),
-        XX(d, DateTimeFormatItem),
-        XX(f, FilenameFormatItem),
-        XX(l, LineFormatItem),
+        XX(m, MessageFormatItem),           //m:消息
+        XX(p, LevelFormatItem),             //p:日志级别
+        XX(r, ElapseFormatItem),            //r:累计毫秒数
+        XX(c, NameFormatItem),              //c:日志名称
+        XX(t, ThreadIdFormatItem),          //t:线程id
+        XX(n, NewLineFormatItem),           //n:换行
+        XX(d, DateTimeFormatItem),          //d:时间
+        XX(f, FilenameFormatItem),          //f:文件名
+        XX(l, LineFormatItem),              //l:行号
+        XX(T, TabFormatItem),               //T:Tab
+        XX(F, FiberIdFormatItem),           //F:协程id
 #undef XX
     };
 
@@ -329,6 +370,20 @@ void LogFormatter::init(){
         std::cout <<"{" << std::get<0>(i) << "} - {" << std::get<1>(i) << "} - {" << std::get<2>(i) << "}" << std::endl;  
     }
     std::cout << m_items.size() << std::endl; 
+}
+
+LoggerManager::LoggerManager(){
+    m_root.reset(new Logger);
+    m_root->addAppender(LogAppender::ptr(new StdoutLogAppender));
+}
+
+Logger::ptr LoggerManager::getLogger(const std::string& name){
+    auto it = m_loggers.find(name);
+    return it == m_loggers.end() ? m_root : it->second;
+}
+    
+void LoggerManager::init(){
+
 }
 
 } /* end namespace sylar */
