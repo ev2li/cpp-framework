@@ -199,10 +199,6 @@ private:
 
 typedef sylar::Singleton<LoggerManager> LoggerMgr;
 
-
-
-
-
 } /* end namespace sylar  */
 
 #endif /* __SYLAR_LOG_H__ */
