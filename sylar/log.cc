@@ -164,7 +164,7 @@ class TabFormatItem : public LogFormatter::FormatItem{
 public:
     TabFormatItem(const std::string& str = ""){}
     void format(std::ostream& os, std::shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) override {
-        os << m_string; 
+        os << "\t"; 
     }
 private:
     std::string m_string;

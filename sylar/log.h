@@ -12,6 +12,7 @@
 #include <ostream>
 #include <map>
 #include "singleton.h"
+#include "util.h"
 
 #define SYLAR_LOG_LEVEL(logger, level)  \
     if(logger->getLevel() <= level) \
@@ -35,6 +36,7 @@
 #define SYLAR_LOG_FMT_ERROR(logger, fmt, ...) SYLAR_LOG_FMT_LEVEL(logger, sylar::LogLevel::ERROR, fmt, __VA_ARGS__)
 #define SYLAR_LOG_FMT_FATAL(logger, fmt, ...) SYLAR_LOG_FMT_LEVEL(logger, sylar::LogLevel::FATAL, fmt, __VA_ARGS__)
 
+#define SYLAR_LOG_ROOT() sylar::LoggerMgr::GetInstance()->getRoot()
 namespace sylar{
 
 class Logger;
@@ -108,7 +110,7 @@ public:
     class FormatItem{
     public:
         typedef std::shared_ptr<FormatItem> ptr;
-        // FormatItem(const std::string& fmt = "");cls
+        // FormatItem(const std::string& fmt = "");
         virtual ~FormatItem(){};
         virtual void format(std::ostream& os, std::shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) = 0;
     };
@@ -192,12 +194,14 @@ public:
     Logger::ptr getLogger(const std::string& name);
     
     void init();
+    Logger::ptr getRoot() const { return m_root; }
 private:
     std::map<std::string, Logger::ptr> m_loggers;
     Logger::ptr m_root;
 };
 
 typedef sylar::Singleton<LoggerManager> LoggerMgr;
+
 
 } /* end namespace sylar  */
 
