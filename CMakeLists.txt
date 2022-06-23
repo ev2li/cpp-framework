@@ -11,6 +11,9 @@ set(LIB_SRC
     )
 
 include_directories(.)
+include_directories(/usr/local/include)
+link_directories(/usr/local/lib)
+
 add_library(sylar SHARED ${LIB_SRC})
 
 add_executable(test tests/test.cc)
@@ -19,7 +22,7 @@ target_link_libraries(test sylar)
 
 add_executable(test_config tests/test_config.cc)
 add_dependencies(test_config sylar)
-target_link_libraries(test_config sylar)
+target_link_libraries(test_config sylar yaml-cpp)
 
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 SET(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
