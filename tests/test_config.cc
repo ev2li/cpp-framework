@@ -2,7 +2,6 @@
 #include "sylar/log.h"
 #include <yaml-cpp/yaml.h>
 
-
 sylar::ConfigVar<int>::ptr g_int_value_config =
     sylar::Config::Lookup("system.port", (int)8080, "system port");
 
@@ -37,6 +36,7 @@ void test_yaml(){
     print_yaml(root, 0);
     // SYLAR_LOG_INFO(SYLAR_LOG_ROOT()) << root;
 }
+
 void test_config(){
     SYLAR_LOG_INFO(SYLAR_LOG_ROOT()) << "before:" << g_int_value_config->getValue();
     SYLAR_LOG_INFO(SYLAR_LOG_ROOT()) << "before:" << g_float_value_config->toString();
@@ -49,5 +49,6 @@ void test_config(){
 int main(){
 
     test_yaml();
+    test_config();
    return 0;
 }

@@ -51,10 +51,10 @@ RM = /Applications/CMake.app/Contents/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/zhangli/Downloads/学习/程序/c:c++项目学习/cpp-framework
+CMAKE_SOURCE_DIR = /Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/zhangli/Downloads/学习/程序/c:c++项目学习/cpp-framework
+CMAKE_BINARY_DIR = /Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -83,9 +83,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/zhangli/Downloads/学习/程序/c:c++项目学习/cpp-framework/CMakeFiles /Users/zhangli/Downloads/学习/程序/c:c++项目学习/cpp-framework/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/CMakeFiles /Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/zhangli/Downloads/学习/程序/c:c++项目学习/cpp-framework/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
