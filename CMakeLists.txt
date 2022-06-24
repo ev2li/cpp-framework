@@ -3,6 +3,11 @@ project(sylar)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -fPIC -ggdb -std=c++11 -Wall -Wno-deprecated -Werror -Wno-unused-function")
+set(CMAKE_C_FLAGS "$ENV{CXXFLAGS} -fPIC -ggdb -std=c11 -Wall -Wno-deprecated -Werror -Wno-unused-function -Wno-builtin-macro-redefined -Wno-deprecated-declarations")
+
+include_directories(.)
+include_directories(/usr/local/include)
+link_directories(/usr/local/lib)
 
 set(LIB_SRC
     sylar/log.cc
@@ -10,9 +15,7 @@ set(LIB_SRC
     sylar/config.cc
     )
 
-include_directories(.)
-include_directories(/usr/local/include)
-link_directories(/usr/local/lib)
+
 
 add_library(sylar SHARED ${LIB_SRC})
 
