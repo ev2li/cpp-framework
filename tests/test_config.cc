@@ -109,6 +109,12 @@ public:
            << "]";
            return ss.str();
     }
+
+    bool operator==(const Person& oth) const{
+        return m_name == oth.m_name
+            && m_age == oth.m_age
+            && m_sex == oth.m_sex;
+    }
 public:
     std::string m_name;
     int m_age = 0;
@@ -165,6 +171,12 @@ void test_class(){
         } \
         SYLAR_LOG_INFO(SYLAR_LOG_ROOT()) <<  prefix << ": size=" << m.size(); \
     }
+
+
+    g_person->addListener(10, [](const Person& old_value, const Person& new_value){
+         SYLAR_LOG_INFO(SYLAR_LOG_ROOT()) << "old_value = " << old_value.toString()
+                << " new_value = " << new_value.toString();
+    });
     XX_PM(g_person_map, "class.map before");
     SYLAR_LOG_INFO(SYLAR_LOG_ROOT()) <<  "before: " << g_person_vec_map->toString();
     YAML::Node root = YAML::LoadFile("/Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/bin/config/log.yml");

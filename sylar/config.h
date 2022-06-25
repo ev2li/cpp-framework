@@ -246,6 +246,7 @@ template<class T, class FromStr = LexicalCast<std::string, T>
 class ConfigVar : public ConfigVarBase {
 public:
     typedef std::shared_ptr<ConfigVar> ptr;
+    typedef std::function<void (const T& old_value, const T& new_value)> on_change_cb;
     ConfigVar(const std::string& name
             , const T& default_value
             , const std::string& description = "")
@@ -277,12 +278,35 @@ public:
     }
 
     const T getValue() const { return m_val; }
-    void setValue(const T& v) { m_val = v; }
+
+    void setValue(const T& v) { 
+        if( v == m_val){
+            return;
+        }
+
+        for (auto& i : m_cbs) {
+            i.second(m_val, v);
+        }
+        m_val = v;
+    }
 
     std::string getTypeName() const override { return typeid(T).name(); }
-    
+    void addListener(uint64_t key, on_change_cb cb){
+        m_cbs[key] = cb;
+    }
+
+    void delListner(uint64_t key){
+        m_cbs.erase(key);
+    }
+
+    on_change_cb getListener(uint64_t key){
+        auto it = m_cbs.find(key);
+        return it == m_cbs.end() ? nullptr : it->second;
+    }
 private:
     T m_val;
+    //变更回调函数组 uint64_t key 要求唯一,一般可以用hash
+    std::map<uint64_t, on_change_cb> m_cbs;
 };
 
 class Config{
