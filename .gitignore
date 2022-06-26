@@ -68,3 +68,4 @@ CMakeCache.txt
 cmake_install.cmake
 .vscode/*
 Makefile
+bin/test*
