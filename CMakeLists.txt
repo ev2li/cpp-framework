@@ -1,9 +1,11 @@
 cmake_minimum_required(VERSION 2.8)
 project(sylar)
 
+
+set(CMAKE_BUILD_TYPE "Debug")
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -fPIC -ggdb -std=c++11 -Wall -Wno-deprecated -Werror -Wno-unused-function")
-set(CMAKE_C_FLAGS "$ENV{CXXFLAGS} -fPIC -ggdb -std=c11 -Wall -Wno-deprecated -Werror -Wno-unused-function -Wno-builtin-macro-redefined -Wno-deprecated-declarations")
+set(CMAKE_C_FLAGS "$ENV{CXXFLAGS} -fPIC  -ggdb -std=c11 -Wall -Wno-deprecated -Werror -Wno-unused-function -Wno-builtin-macro-redefined -Wno-deprecated-declarations")
 
 #set(CMAKE_MACOSX_RPATH 1)
 include_directories(.)

@@ -47,7 +47,7 @@ class LoggerManager;
 class LogLevel{
 public:
     enum Level{
-        UNKONW = 0,
+        UNKNOW = 0,
         DEBUG = 1,
         INFO = 2,
         WARN = 3,
@@ -120,6 +120,7 @@ public:
 
     void init();
     bool isError() const { return m_error; }
+    const std::string getPattern() const { return m_pattern; }
 private:
     std::string m_pattern;
     std::vector<FormatItem::ptr> m_items; 
@@ -134,12 +135,13 @@ public:
     virtual ~LogAppender(){};
 
     virtual void log(std::shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) = 0;
-
+    virtual std::string toYamlString() = 0;
     void setFormatter(LogFormatter::ptr val){ m_formatter = val; }
     LogFormatter::ptr getFormatter() const { return m_formatter; }
 
     LogLevel::Level getLevel() const { return m_level;}
     void setLevel(LogLevel::Level val) { m_level = val;}
+    
 protected:
     LogLevel::Level m_level = LogLevel::DEBUG;
     LogFormatter::ptr m_formatter;
@@ -173,6 +175,7 @@ public:
     void setFormatter(const std::string& val);
 
     LogFormatter::ptr getFormatter() const;
+    std::string toYamlString();
 private:
     std::string m_name;                       //日志名称 
     LogLevel::Level m_level;                  //日志级别
@@ -186,6 +189,7 @@ class StdoutLogAppender : public LogAppender{
 public:
     typedef std::shared_ptr<StdoutLogAppender> ptr;
     void log(std::shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) override;
+    std::string toYamlString() override;
 };
 
 
@@ -195,6 +199,7 @@ public:
     FileLogAppender(const std::string& filename);
     void log(std::shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) override;
     
+    std::string toYamlString() override;
     //重新打开,文件打开返回true,
     bool reopen();
 private:
@@ -209,6 +214,7 @@ public:
     
     void init();
     Logger::ptr getRoot() const { return m_root; }
+    std::string toYamlString();
 private:
     std::map<std::string, Logger::ptr> m_loggers;
     Logger::ptr m_root;

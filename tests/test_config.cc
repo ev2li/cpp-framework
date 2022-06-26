@@ -1,6 +1,8 @@
 #include "sylar/config.h"
 #include "sylar/log.h"
 #include <yaml-cpp/yaml.h>
+#include <iostream>
+
 
 sylar::ConfigVar<int>::ptr g_int_value_config =
     sylar::Config::Lookup("system.port", (int)8080, "system port");
@@ -179,16 +181,24 @@ void test_class(){
     });
     XX_PM(g_person_map, "class.map before");
     SYLAR_LOG_INFO(SYLAR_LOG_ROOT()) <<  "before: " << g_person_vec_map->toString();
-    YAML::Node root = YAML::LoadFile("/Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/bin/config/log.yml");
+    YAML::Node root = YAML::LoadFile("/Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/bin/config/test.yml");
     sylar::Config::LoadFromYaml(root);
     SYLAR_LOG_INFO(SYLAR_LOG_ROOT()) << "after:" << g_person->getValue().toString() << " - " << g_person->toString();
     XX_PM(g_person_map, "class.map after");
     SYLAR_LOG_INFO(SYLAR_LOG_ROOT()) << "after:" << g_person_vec_map->toString();
 }
 
+void test_log(){
+    std::cout << sylar::LoggerMgr::GetInstance()->toYamlString() << std::endl;
+    YAML::Node root = YAML::LoadFile("/Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/bin/config/log.yml");
+    std::cout << "=================" << std::endl;
+    sylar::Config::LoadFromYaml(root);
+}
+
 int main(){
     //test_yaml();
     // test_config();
-    test_class();
+    // test_class();
+    test_log();
    return 0;
 }
