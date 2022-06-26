@@ -340,8 +340,8 @@ public:
     
     template<class T>
     static typename ConfigVar<T>::ptr Lookup(const std::string& name){
-        auto it = s_datas.find(name);
-        if(it == s_datas.end()){
+        auto it = GetDatas().find(name);
+        if(it == GetDatas().end()){
             return nullptr;
         }
         return std::dynamic_pointer_cast<ConfigVar<T>>(it->second);
@@ -351,7 +351,11 @@ public:
     static ConfigVarBase::ptr LookupBase(const std::string& name);
 
 private:
-    static ConfigVarMap s_datas;
+    static ConfigVarMap& GetDatas(){
+        static ConfigVarMap s_datas;
+        return s_datas;
+    }
+    
 };
 
 } // namespace sylarx

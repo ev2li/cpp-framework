@@ -1,0 +1,54 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/zhangli/Downloads/学习/程序/c:c++项目学习/cpp-framework'
+/Applications/CMake.app/Contents/bin/cmake -S/Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework -B/Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework --check-build-system CMakeFiles/Makefile.cmake 0
+/Applications/CMake.app/Contents/bin/cmake -E cmake_progress_start /Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/CMakeFiles /Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/CMakeFiles/progress.marks
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/Makefile2 all
+make[1]: Entering directory `/Users/zhangli/Downloads/学习/程序/c:c++项目学习/cpp-framework'
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/sylar.dir/build.make CMakeFiles/sylar.dir/depend
+ 
+make[2]: Entering directory `/Users/zhangli/Downloads/学习/程序/c:c++项目学习/cpp-framework'
+cd /Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework && /Applications/CMake.app/Contents/bin/cmake -E cmake_depends "Unix Makefiles" /Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework /Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework /Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework /Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework /Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/CMakeFiles/sylar.dir/DependInfo.cmake --color=
+make[2]: Leaving directory `/Users/zhangli/Downloads/学习/程序/c:c++项目学习/cpp-framework'
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/sylar.dir/build.make CMakeFiles/sylar.dir/build
+ 
+make[2]: Entering directory `/Users/zhangli/Downloads/学习/程序/c:c++项目学习/cpp-framework'
+/Applications/CMake.app/Contents/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/CMakeFiles --progress-num=1 "Building CXX object CMakeFiles/sylar.dir/sylar/log.cc.o"
+/Library/Developer/CommandLineTools/usr/bin/c++  -Dsylar_EXPORTS -I/usr/local/include -I/Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/.  -fPIC -ggdb -std=c++11 -Wall -Wno-deprecated -Werror -Wno-unused-function -fPIC   -o CMakeFiles/sylar.dir/sylar/log.cc.o -c /Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/sylar/log.cc
+/Applications/CMake.app/Contents/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/CMakeFiles --progress-num=2 "Building CXX object CMakeFiles/sylar.dir/sylar/util.cc.o"
+/Library/Developer/CommandLineTools/usr/bin/c++  -Dsylar_EXPORTS -I/usr/local/include -I/Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/.  -fPIC -ggdb -std=c++11 -Wall -Wno-deprecated -Werror -Wno-unused-function -fPIC   -o CMakeFiles/sylar.dir/sylar/util.cc.o -c /Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/sylar/util.cc
+/Applications/CMake.app/Contents/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/CMakeFiles --progress-num=3 "Building CXX object CMakeFiles/sylar.dir/sylar/config.cc.o"
+/Library/Developer/CommandLineTools/usr/bin/c++  -Dsylar_EXPORTS -I/usr/local/include -I/Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/.  -fPIC -ggdb -std=c++11 -Wall -Wno-deprecated -Werror -Wno-unused-function -fPIC   -o CMakeFiles/sylar.dir/sylar/config.cc.o -c /Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/sylar/config.cc
+/Applications/CMake.app/Contents/bin/cmake -E cmake_echo_color --switch= --green --bold --progress-dir=/Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/CMakeFiles --progress-num=4 "Linking CXX shared library lib/libsylar.dylib"
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/sylar.dir/link.txt --verbose=1
+make[2]: Leaving directory `/Users/zhangli/Downloads/学习/程序/c:c++项目学习/cpp-framework'
+/Applications/CMake.app/Contents/bin/cmake -E cmake_echo_color --switch= --progress-dir=/Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/CMakeFiles --progress-num=1,2,3,4 "Built target sylar"
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/test_config.dir/build.make CMakeFiles/test_config.dir/depend
+ 
+make[2]: Entering directory `/Users/zhangli/Downloads/学习/程序/c:c++项目学习/cpp-framework'
+cd /Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework && /Applications/CMake.app/Contents/bin/cmake -E cmake_depends "Unix Makefiles" /Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework /Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework /Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework /Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework /Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/CMakeFiles/test_config.dir/DependInfo.cmake --color=
+make[2]: Leaving directory `/Users/zhangli/Downloads/学习/程序/c:c++项目学习/cpp-framework'
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/test_config.dir/build.make CMakeFiles/test_config.dir/build
+ 
+make[2]: Entering directory `/Users/zhangli/Downloads/学习/程序/c:c++项目学习/cpp-framework'
+/Applications/CMake.app/Contents/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/CMakeFiles --progress-num=7 "Building CXX object CMakeFiles/test_config.dir/tests/test_config.cc.o"
+/Library/Developer/CommandLineTools/usr/bin/c++   -I/usr/local/include -I/Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/.  -fPIC -ggdb -std=c++11 -Wall -Wno-deprecated -Werror -Wno-unused-function   -o CMakeFiles/test_config.dir/tests/test_config.cc.o -c /Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/tests/test_config.cc
+/Applications/CMake.app/Contents/bin/cmake -E cmake_echo_color --switch= --green --bold --progress-dir=/Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/CMakeFiles --progress-num=8 "Linking CXX executable bin/test_config"
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/test_config.dir/link.txt --verbose=1
+make[2]: Leaving directory `/Users/zhangli/Downloads/学习/程序/c:c++项目学习/cpp-framework'
+/Applications/CMake.app/Contents/bin/cmake -E cmake_echo_color --switch= --progress-dir=/Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/CMakeFiles --progress-num=7,8 "Built target test_config"
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/depend
+make[2]: Entering directory `/Users/zhangli/Downloads/学习/程序/c:c++项目学习/cpp-framework'
+cd /Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework && /Applications/CMake.app/Contents/bin/cmake -E cmake_depends "Unix Makefiles" /Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework /Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework /Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework /Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework /Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/CMakeFiles/test.dir/DependInfo.cmake --color=
+make[2]: Leaving directory `/Users/zhangli/Downloads/学习/程序/c:c++项目学习/cpp-framework'
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/build
+make[2]: Entering directory `/Users/zhangli/Downloads/学习/程序/c:c++项目学习/cpp-framework'
+/Applications/CMake.app/Contents/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/CMakeFiles --progress-num=5 "Building CXX object CMakeFiles/test.dir/tests/test.cc.o"
+/Library/Developer/CommandLineTools/usr/bin/c++   -I/usr/local/include -I/Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/.  -fPIC -ggdb -std=c++11 -Wall -Wno-deprecated -Werror -Wno-unused-function   -o CMakeFiles/test.dir/tests/test.cc.o -c /Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/tests/test.cc
+/Applications/CMake.app/Contents/bin/cmake -E cmake_echo_color --switch= --green --bold --progress-dir=/Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/CMakeFiles --progress-num=6 "Linking CXX executable bin/test"
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/test.dir/link.txt --verbose=1
+make[2]: Leaving directory `/Users/zhangli/Downloads/学习/程序/c:c++项目学习/cpp-framework'
+/Applications/CMake.app/Contents/bin/cmake -E cmake_echo_color --switch= --progress-dir=/Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/CMakeFiles --progress-num=5,6 "Built target test"
+make[1]: Leaving directory `/Users/zhangli/Downloads/学习/程序/c:c++项目学习/cpp-framework'
+/Applications/CMake.app/Contents/bin/cmake -E cmake_progress_start /Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/CMakeFiles 0
+make: Leaving directory `/Users/zhangli/Downloads/学习/程序/c:c++项目学习/cpp-framework'
+ 

@@ -53,7 +53,7 @@ void print_yaml(const YAML::Node& node, int level){
 }
 
 void test_yaml(){
-    YAML::Node root = YAML::LoadFile("/Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/bin/config/log.yml");
+    YAML::Node root = YAML::LoadFile("/Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/bin/config/test.yml");
     print_yaml(root, 0);
     // SYLAR_LOG_INFO(SYLAR_LOG_ROOT()) << root;
 }
@@ -85,7 +85,7 @@ auto& v = g_var->getValue();    \
     XX(g_int_uset_value_config, int_uset, before);
     XX_M(g_str_int_map_value_config, str_int_map, before);
     XX_M(g_str_int_umap_value_config, str_int_umap, before);
-    YAML::Node root = YAML::LoadFile("/Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/bin/config/log.yml");
+    YAML::Node root = YAML::LoadFile("/Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/bin/config/test.yml");
     sylar::Config::LoadFromYaml(root);
     SYLAR_LOG_INFO(SYLAR_LOG_ROOT()) << "after:" << g_int_value_config->getValue();
     SYLAR_LOG_INFO(SYLAR_LOG_ROOT()) << "after:" << g_float_value_config->toString();   

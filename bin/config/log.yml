@@ -4,54 +4,12 @@ logs:
       formatter: '%d%T%m%n'
       appenders:
           - type: FileLogAppender
-            file: /apps/logs/sylar/root.txt
+            file: log.txt
           - type: StdoutLogAppender
     - name: system
-      level: info
+      level: debug
       formatter: '%d%T%m%n'      
       appenders:
           - type: FileLogAppender
-            file: /apps/logs/sylar/system.txt
+            file: log.txt
           - type: StdoutLogAppender
-
-system:
-    port: 9900
-    value: 15
-    int_vec:
-      - 10
-      - 20
-    int_list: [20, 40, 50]
-    int_set:  [20, 30, 20, 40]
-    int_uset:  [20, 30, 20, 40]
-    str_int_map:
-      k:  30
-      k2: 20
-      k3: 10
-    str_int_umap:
-      k:  30
-      k2: 20
-      k3: 10
-      k4: 20
-
-class:
-    person:
-      name: sylar 
-      age:  30
-      sex: true
-    map:
-      zhangli:
-        name: zhangli
-        age: 31
-        sex: true
-      zhangyanlan:
-        name: zhangyalan
-        age: 32
-        sex: true        
-    vec_map:
-      k1:
-        - name: m1
-          age: 33
-          sex: true
-        - name: m2
-          age: 44
-          sex: false
