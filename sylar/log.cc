@@ -456,7 +456,7 @@ struct LogDefine{
     std::string  formatter;
     std::vector<LogAppenderDefine> appenders;
 
-    bool operator==(const LogDefine& oth){
+    bool operator==(const LogDefine& oth) const{
         return name == oth.name
             && level == oth.level
             && formatter == oth.formatter
@@ -499,14 +499,14 @@ public:
                     LogAppenderDefine lad;
                     if(type == "FileLogAppender"){
                         lad.type = 1;
-                        if(!n["file"].IsDefined()){
+                        if(!a["file"].IsDefined()){
                             std::cout << "log config error: fileappender  is null, " << a << std::endl;
                             continue;                             
                         }
-                        lad.file = n["file"].as<std::string>();
+                        lad.file = a["file"].as<std::string>();
 
-                        if(n["formatter"].IsDefined()){
-                            lad.formatter = n["formatter"].as<std::string>();
+                        if(a["formatter"].IsDefined()){
+                            lad.formatter = a["formatter"].as<std::string>();
                         }
                     }else if(type == "StdoutLogAppender"){
                         lad.type = 2;
@@ -524,13 +524,34 @@ public:
     }
 };
 
-template<class T>
+template<>
 class LexicalCast<std::set<LogDefine>, std::string>{
 public: 
     std::string operator()(const std::set<LogDefine>& v){
         YAML::Node node;
         for (auto& i : v) {
-            node.push_back(YAML::Load(LexicalCast<T, std::string>()(i)));
+            YAML::Node n;
+            n["name"] = i.name;
+            n["level"] = LogLevel::ToString(i.level);
+            if(!i.formatter.empty()){
+                n["formatter"] = i.formatter ;
+            }
+
+            for(auto& a : i.appenders){
+                YAML::Node na;
+                if(a.type == 1){
+                    na["type"] = "FileLogAppender";
+                    na["file"] = a.file;
+                }else if (a.type == 2) {
+                    na["type"] = "StdoutLogAppender";
+                }
+                na["level"] = LogLevel::ToString(a.level);
+                if(!a.formatter.empty()){
+                    na["formatter"] = a.formatter;
+                }
+                n["appenders"].push_back(na);
+            }
+            node.push_back(n);
         }
 
         std::stringstream ss;
@@ -539,14 +560,14 @@ public:
     }
 };
 
-sylar::ConfigVar<std::set<LogDefine>> g_log_defines = 
+sylar::ConfigVar<std::set<LogDefine>>::ptr g_log_defines = 
     sylar::Config::Lookup("logs", std::set<LogDefine>(), "logs config");
 
 struct LogIniter{
     LogIniter(){
-        g_log_defines->adListener(0xF1E231,[](const std::set<LogDefine>& old_value,
+        g_log_defines->addListener(0xF1E231,[](const std::set<LogDefine>& old_value,
                 const std::set<LogDefine>& new_value){
-            SYLAR_LOG_NAME(SYLAR_LOG_ROOT()) << "on_logger_conf_changed";
+            SYLAR_LOG_INFO(SYLAR_LOG_ROOT()) << "on_logger_conf_changed";
             //新增
             for (auto& i : new_value) {
                 auto it = old_value.find(i);
@@ -558,6 +579,8 @@ struct LogIniter{
                     if(!(i == *it)){
                         //修改的logger
                         logger = SYLAR_LOG_NAME(i.name);
+                    }else{
+                        continue;
                     }
                 }
 
@@ -569,7 +592,7 @@ struct LogIniter{
                 for (auto& a : i.appenders) {
                     sylar::LogAppender::ptr ap;
                     if(a.type == 1){
-                        ap.reset(new FileLogAppender(i.file));
+                        ap.reset(new FileLogAppender(a.file));
                     }else if(a.type == 2){
                         ap.reset(new StdoutLogAppender);
                     }
@@ -581,7 +604,7 @@ struct LogIniter{
             //删除
             for (auto& i : old_value) {
                 auto it = new_value.find(i);
-                if(it == neww_value.end()){
+                if(it == new_value.end()){
                     //删除logger
                     auto logger = SYLAR_LOG_NAME(i.name);
                     logger->setLevel((LogLevel::Level)100);

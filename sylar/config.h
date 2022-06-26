@@ -315,8 +315,8 @@ public:
     template<class T>
     static typename ConfigVar<T>::ptr Lookup(const std::string& name,
         const T& default_value, const std::string& description = ""){
-            auto it = s_datas.find(name);
-            if(it != s_datas.end()){
+            auto it =  GetDatas().find(name);
+            if(it !=  GetDatas().end()){
                 auto tmp = std::dynamic_pointer_cast<ConfigVar<T>>(it->second);
                 if(tmp){
                     SYLAR_LOG_INFO(SYLAR_LOG_ROOT()) << "Lookup name = " << name << " exists";
@@ -334,7 +334,7 @@ public:
                 throw std::invalid_argument(name);
             }
             typename ConfigVar<T>::ptr v(new ConfigVar<T>(name, default_value, description ));
-            s_datas[name] = v;
+            GetDatas()[name] = v;
             return v;
         }
     
