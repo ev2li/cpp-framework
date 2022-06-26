@@ -189,6 +189,8 @@ void test_class(){
 }
 
 void test_log(){
+    static sylar::Logger::ptr system_log = SYLAR_LOG_NAME("system");
+    SYLAR_LOG_INFO(system_log) << "hello system" << std::endl;
     std::cout << sylar::LoggerMgr::GetInstance()->toYamlString() << std::endl;
     YAML::Node root = YAML::LoadFile("/Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/bin/config/log.yml");
     std::cout << "=================" << std::endl;
