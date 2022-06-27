@@ -13,6 +13,7 @@
 #include <unordered_set>
 #include "sylar/log.h"
 #include <functional>
+#include <iostream>
 
 namespace sylar
 {
@@ -315,10 +316,14 @@ public:
     template<class T>
     static typename ConfigVar<T>::ptr Lookup(const std::string& name,
         const T& default_value, const std::string& description = ""){
+            std::cout << "aaaaaaaa"  << std::endl;
+            std::cout << name << std::endl;
             auto it =  GetDatas().find(name);
             if(it !=  GetDatas().end()){
+                std::cout << "eeeeee"  << std::endl;
                 auto tmp = std::dynamic_pointer_cast<ConfigVar<T>>(it->second);
                 if(tmp){
+                    std::cout << name << std::endl;
                     SYLAR_LOG_INFO(SYLAR_LOG_ROOT()) << "Lookup name = " << name << " exists";
                     return tmp; 
                 }else{
@@ -328,13 +333,14 @@ public:
                     return nullptr;
                 }
             }
-
+                        std::cout << "bbbbbbb"  << std::endl;
             if(name.find_first_not_of("abcdefghijklmnopqrstuvwxyz._0123456789") != std::string::npos){
                 SYLAR_LOG_INFO(SYLAR_LOG_ROOT()) << "Lookup name invalid " << name;
                 throw std::invalid_argument(name);
             }
-            typename ConfigVar<T>::ptr v(new ConfigVar<T>(name, default_value, description ));
+            typename ConfigVar<T>::ptr v(new ConfigVar<T>(name, default_value, description));
             GetDatas()[name] = v;
+             std::cout << "cccccccc"  << std::endl;
             return v;
         }
     

@@ -3,7 +3,7 @@
 #include <yaml-cpp/yaml.h>
 #include <iostream>
 
-
+#if 0
 sylar::ConfigVar<int>::ptr g_int_value_config =
     sylar::Config::Lookup("system.port", (int)8080, "system port");
 
@@ -187,6 +187,7 @@ void test_class(){
     XX_PM(g_person_map, "class.map after");
     SYLAR_LOG_INFO(SYLAR_LOG_ROOT()) << "after:" << g_person_vec_map->toString();
 }
+#endif
 
 void test_log(){
     static sylar::Logger::ptr system_log = SYLAR_LOG_NAME("system");
@@ -195,7 +196,12 @@ void test_log(){
     YAML::Node root = YAML::LoadFile("/Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/bin/config/log.yml");
     std::cout << "=================" << std::endl;
     sylar::Config::LoadFromYaml(root);
-}
+    std::cout << sylar::LoggerMgr::GetInstance()->toYamlString() << std::endl;
+    std::cout << root << std::endl;
+    SYLAR_LOG_INFO(system_log) << "hello system" << std::endl;
+    system_log->setFormatter("%d - %m%n");
+    SYLAR_LOG_INFO(system_log) << "hello system" << std::endl;   
+} 
 
 int main(){
     //test_yaml();

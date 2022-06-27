@@ -13,6 +13,7 @@
 #include <map>
 #include "singleton.h"
 #include "util.h"
+#include <iostream>
 
 #define SYLAR_LOG_LEVEL(logger, level)  \
     if(logger->getLevel() <= level) \
@@ -73,7 +74,7 @@ public:
     std::shared_ptr<Logger> getLogger() const { return m_logger; }
     LogLevel::Level getLevel() const { return m_level; };
 
-    std::stringstream& getSS() {return m_ss;}
+    std::stringstream& getSS() { return m_ss;}
 
     void format(const char* fmt, ...);
     void format(const char* fmt, va_list al);
@@ -130,13 +131,14 @@ private:
 
 //日志输出地
 class LogAppender{
+friend class Logger;
 public:
     typedef std::shared_ptr<LogAppender> ptr;
     virtual ~LogAppender(){};
 
     virtual void log(std::shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) = 0;
     virtual std::string toYamlString() = 0;
-    void setFormatter(LogFormatter::ptr val){ m_formatter = val; }
+    void setFormatter(LogFormatter::ptr);
     LogFormatter::ptr getFormatter() const { return m_formatter; }
 
     LogLevel::Level getLevel() const { return m_level;}
@@ -144,6 +146,7 @@ public:
     
 protected:
     LogLevel::Level m_level = LogLevel::DEBUG;
+    bool m_hasFormatter = false;
     LogFormatter::ptr m_formatter;
 };
 
@@ -181,7 +184,7 @@ private:
     LogLevel::Level m_level;                  //日志级别
     std::list<LogAppender::ptr> m_appenders; //Appender集合
     LogFormatter::ptr m_formatter;           //日志格式器
-    Logger::ptr m_root;
+    Logger::ptr m_root;                     //主日志器
 };
 
 //输出到控制台的Appender
