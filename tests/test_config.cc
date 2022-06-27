@@ -57,7 +57,6 @@ void print_yaml(const YAML::Node& node, int level){
 void test_yaml(){
     YAML::Node root = YAML::LoadFile("/Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/bin/config/test.yml");
     print_yaml(root, 0);
-    // SYLAR_LOG_INFO(SYLAR_LOG_ROOT()) << root;
 }
 
 void test_config(){
@@ -191,8 +190,10 @@ void test_class(){
 
 void test_log(){
     static sylar::Logger::ptr system_log = SYLAR_LOG_NAME("system");
+
     SYLAR_LOG_INFO(system_log) << "hello system" << std::endl;
-    std::cout << sylar::LoggerMgr::GetInstance()->toYamlString() << std::endl;
+        std::cout << "sssssssssssss" << std::endl;
+      /*  std::cout << sylar::LoggerMgr::GetInstance()->toYamlString() << std::endl;
     YAML::Node root = YAML::LoadFile("/Users/zhangli/dw/学习/程序/c:c++项目学习/cpp-framework/bin/config/log.yml");
     std::cout << "=================" << std::endl;
     sylar::Config::LoadFromYaml(root);
@@ -200,13 +201,14 @@ void test_log(){
     std::cout << root << std::endl;
     SYLAR_LOG_INFO(system_log) << "hello system" << std::endl;
     system_log->setFormatter("%d - %m%n");
-    SYLAR_LOG_INFO(system_log) << "hello system" << std::endl;   
+    SYLAR_LOG_INFO(system_log) << "hello system" << std::endl;   */
 } 
 
 int main(){
     //test_yaml();
     // test_config();
     // test_class();
-    test_log();
+    // test_log();
+    SYLAR_LOG_INFO(SYLAR_LOG_ROOT()) << "xxxx";
    return 0;
 }

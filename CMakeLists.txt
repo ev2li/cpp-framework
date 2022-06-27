@@ -13,7 +13,7 @@ include_directories(BEFORE /usr/local/include)
 link_directories(BEFORE /usr/local/lib)
 endif()
 
-if(UNIX)
+if(NOT APPLE)
 include_directories(/apps/sylar/include)
 link_directories(/apps/sylar/lib)
 link_directories(/apps/sylar/lib64)
