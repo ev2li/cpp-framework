@@ -13,6 +13,12 @@ include_directories(BEFORE /usr/local/include)
 link_directories(BEFORE /usr/local/lib)
 endif()
 
+if(UNIX)
+include_directories(/apps/sylar/include)
+link_directories(/apps/sylar/lib)
+link_directories(/apps/sylar/lib64)
+endif()
+
 set(LIB_SRC
     sylar/log.cc
     sylar/util.cc
