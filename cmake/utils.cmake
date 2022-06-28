@@ -15,3 +15,11 @@ function(force_redefine_file_macro_for_sources targetname)
             )
     endforeach()
 endfunction()
+
+
+function(sylar_add_executable targetname srcs depends libs)
+    add_executable(${targetname} ${srcs})
+    add_dependencies(${targetname} ${depends})
+    force_redefine_file_macro_for_sources(${targetname})
+    target_link_libraries(${targetname} ${libs})
+endfunction()

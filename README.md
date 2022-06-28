@@ -2,3 +2,4 @@
 ## 已完成部分
 + log
 + config
++ thread[开始]

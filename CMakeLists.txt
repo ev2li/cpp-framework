@@ -23,19 +23,32 @@ set(LIB_SRC
     sylar/log.cc
     sylar/util.cc
     sylar/config.cc
+    sylar/thread.cc
     )
 
+set(LIBS
+    sylar
+    pthread
+    yaml-cpp
+)
+
 add_library(sylar SHARED ${LIB_SRC})
+
 force_redefine_file_macro_for_sources(sylar) #__FILE__
+
+#find_library(YAMLCPP yaml-cpp)
+#find_library(PTHREAD pthread)
+
 add_executable(test tests/test.cc)
 add_dependencies(test sylar)
 force_redefine_file_macro_for_sources(test)
-target_link_libraries(test sylar)
+target_link_libraries(test ${LIBS})
 
-add_executable(test_config tests/test_config.cc)
-add_dependencies(test_config sylar yaml-cpp)
-force_redefine_file_macro_for_sources(test_config)
-target_link_libraries(test_config sylar yaml-cpp)
+#add_executable(test_config tests/test_config.cc)
+#add_dependencies(test_config sylar)
+#force_redefine_file_macro_for_sources(test_config)
+#target_link_libraries(test_config ${LIBS})
 
+sylar_add_executable(test_config "tests/test_config.cc" sylar "${LIBS}")
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 SET(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
