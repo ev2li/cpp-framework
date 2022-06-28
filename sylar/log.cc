@@ -58,6 +58,7 @@ LogEventWrap::LogEventWrap(LogEvent::ptr e):m_event(e){
 }
 
 LogEventWrap::~LogEventWrap(){
+    // std::cout << "kkkkkkkkkkkkk" << std::endl;
     m_event->getLogger()->log(m_event->getLevel(), m_event);
 }
 
@@ -214,16 +215,15 @@ LogEvent::LogEvent(std::shared_ptr<Logger> logger, LogLevel::Level level, const 
     m_time(time),
     m_logger(logger),
     m_level(level){
-        std::cout << "new LogEvent" << std::endl;
+       // << "logger name " << logger->getName() << std::endl;
+        //std::cout << "new LogEvent cr" << std::endl;
 }
 
 Logger::Logger(const std::string& name):m_name(name),m_level(LogLevel::DEBUG){
     m_formatter.reset(new LogFormatter("%d{%Y-%m-%d %H:%M:%S}%T%t%T%F%T[%p]%T[%c]%T%f:%l%T%m%n"));
-    std::cout << name << " cr " << std::endl;
-    if(name == "root"){
-        m_appenders.push_back(StdoutLogAppender::ptr(new StdoutLogAppender));
-    }
+    //std::cout << name << " Logger cr " << std::endl;
 }
+
 void Logger::setFormatter(LogFormatter::ptr val){
     m_formatter = val;
     for (auto& i : m_appenders) {
@@ -340,7 +340,7 @@ bool FileLogAppender::reopen(){
 void StdoutLogAppender::log(std::shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event){
 
     if(level >= m_level){
-        std::cout << "vvvvvvdddddvvv" << std::endl;
+        // std::cout << "vvvvvvdddddvvv" <<logger->getName() << std::endl;
         std::cout << m_formatter->format(logger, level, event);
     }
 }
@@ -361,15 +361,17 @@ std::string StdoutLogAppender::toYamlString() {
 
 
 LogFormatter::LogFormatter(const std::string& pattern):m_pattern(pattern){
+    // std::cout << "llllll" << m_pattern  << std::endl;
     init();
 }
 
 
 std::string LogFormatter::format(std::shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event){
     std::stringstream ss;
-    std::cout << "mmmmmmmxxxx" << std::endl;
+    // std::cout << "mmmmmmmxxxx" << logger->getName() << std::endl;
+
     for(auto& i : m_items){
-        std::cout << "nnnnnnnnxxxx" << std::endl;
+        // std::cout << "nnnnnnnnxxxx" << std::endl;
         i->format(ss, logger, level, event);
     }
     std::cout << ss.str() << std::endl;
@@ -377,8 +379,8 @@ std::string LogFormatter::format(std::shared_ptr<Logger> logger, LogLevel::Level
 }
 
 void LogFormatter::init(){
-     std::cout << "sssssssxxxx" << std::endl;
-    std::cout << m_pattern << std::endl;
+    //  std::cout << "sssssssxxxx" << std::endl;
+    // std::cout << m_pattern << std::endl;
     //str,  format, type
     std::vector<std::tuple<std::string,  std::string, int>> vec;
     std::string nstr;
@@ -478,9 +480,9 @@ void LogFormatter::init(){
                 m_items.push_back(it->second(std::get<1>(i)));
             }
         }
-        std::cout <<"{" << std::get<0>(i) << "} - {" << std::get<1>(i) << "} - {" << std::get<2>(i) << "}" << std::endl;  
+        // std::cout <<"{" << std::get<0>(i) << "} - {" << std::get<1>(i) << "} - {" << std::get<2>(i) << "}" << std::endl;  
     }
-    std::cout << m_items.size() << " init " << std::endl; 
+    // std::cout << m_items.size() << " init " << std::endl; 
 }
 
 LoggerManager::LoggerManager(){
@@ -654,6 +656,7 @@ struct LogIniter{
     LogIniter(){
         g_log_defines->addListener(0xF1E231,[](const std::set<LogDefine>& old_value,
                 const std::set<LogDefine>& new_value){
+                    // std::cout << "fffffffffffffffff" << std::endl;
             SYLAR_LOG_INFO(SYLAR_LOG_ROOT()) << "on_logger_conf_changed";
             //新增
             for (auto& i : new_value) {

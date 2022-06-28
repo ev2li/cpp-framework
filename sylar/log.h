@@ -138,7 +138,7 @@ public:
 
     virtual void log(std::shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) = 0;
     virtual std::string toYamlString() = 0;
-    void setFormatter(LogFormatter::ptr);
+    void setFormatter(LogFormatter::ptr val);
     LogFormatter::ptr getFormatter() const { return m_formatter; }
 
     LogLevel::Level getLevel() const { return m_level;}

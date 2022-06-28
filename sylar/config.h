@@ -369,12 +369,12 @@ namespace sylar
         static typename ConfigVar<T>::ptr Lookup(const std::string &name,
                                                  const T &default_value, const std::string &description = "")
         {
-            std::cout << "aaaaaaaa" << std::endl;
-            std::cout << name << std::endl;
+            // std::cout << "aaaaaaaa" << std::endl;
+            // std::cout << name << std::endl;
             auto it = GetDatas().find(name);
             if (it != GetDatas().end())
             {
-                std::cout << "eeeeee" << std::endl;
+                // std::cout << "eeeeee" << std::endl;
                 auto tmp = std::dynamic_pointer_cast<ConfigVar<T>>(it->second);
                 if (tmp)
                 {
@@ -390,16 +390,16 @@ namespace sylar
                     return nullptr;
                 }
             }
-            std::cout << "bbbbbbb" << std::endl;
+            // std::cout << "bbbbbbb" << std::endl;
             if (name.find_first_not_of("abcdefghijklmnopqrstuvwxyz._0123456789") != std::string::npos)
             {
-                std::cout << "xxxxxx" << std::endl;
+                // std::cout << "xxxxxx" << std::endl;
                 SYLAR_LOG_INFO(SYLAR_LOG_ROOT()) << "Lookup name invalid " << name;
                 throw std::invalid_argument(name);
             }
             typename ConfigVar<T>::ptr v(new ConfigVar<T>(name, default_value, description));
             GetDatas()[name] = v;
-            std::cout << "cccccccc" << std::endl;
+            // std::cout << "cccccccc" << std::endl;m
             return v;
         }
 
