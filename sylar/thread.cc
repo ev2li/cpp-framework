@@ -53,8 +53,6 @@ void* Thread::run(void* arg){
 #elif __APPLE__
     pthread_setname_np(thread->m_name.substr(0, 15).c_str());
 #endif   
-
-
     std::function<void()> cb;
     cb.swap(thread->m_cb);
 
