@@ -22,5 +22,9 @@ int main(int argc, char const *argv[])
         sylar::Thread::ptr thr(new sylar::Thread(&fun1, "name_" + std::to_string(i)));
         thrs.push_back(thr);
     }
+    for(int i = 0; i < 5; i++){
+        thrs[i]->join();
+    }
+    SYLAR_LOG_INFO(g_logger) << "thread test end";
     return 0;
 }
