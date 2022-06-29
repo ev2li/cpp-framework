@@ -71,8 +71,8 @@ void LogEvent::format(const char* fmt, ...){
 
 void LogEvent::format(const char* fmt, va_list al){
     char* buf = nullptr;
-    int len = vasprintf(&buf, fmt, al);
-    if(len != -1){
+    int len = vsprintf(buf, fmt, al);
+    if(len != -1) {
         m_ss << std::string(buf, len);
         free(buf);
     }

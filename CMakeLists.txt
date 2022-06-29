@@ -4,7 +4,7 @@ include (cmake/utils.cmake)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 if (APPLE)
-set(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -O0 -fPIC -ggdb -std=c++11 -Wall -Wno-deprecated -Werror -Wno-unused-function  -Wno-builtin-macro-redefined -Wno-deprecated-declarations")
+set(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -O0 -fPIC -ggdb -std=c++11 -Wall -Wno-deprecated -Werror -Wno-unused-function  -Wno-builtin-macro-redefined -Wno-deprecated-declarations -D_XOPEN_SOURCE=600")
 set(CMAKE_C_FLAGS "$ENV{CXXFLAGS} -O0 -fPIC  -ggdb -std=c11 -Wall -Wno-deprecated -Werror -Wno-unused-function -Wno-builtin-macro-redefined -Wno-deprecated-declarations")
 endif()
 
@@ -29,6 +29,7 @@ endif()
 
 set(LIB_SRC
     sylar/log.cc
+    sylar/fiber.cc
     sylar/util.cc
     sylar/config.cc
     sylar/thread.cc
