@@ -7,6 +7,7 @@
 #include <string>
 #include <pthread.h>
 #include <semaphore.h>
+#include <atomic>
 
 #include "noncopyable.h"
 
@@ -191,6 +192,51 @@ public:
     void rdlock(){}
     void wrlock(){}
     void unlock(){}   
+};
+
+#ifdef __linux__
+class Spinlock : Noncopyable{
+public:
+    typedef ScopedLockImpl<Spinlock> Lock;
+    Spinlock(){
+        pthread_spin_init(&m_mutex, 0);
+    }
+    ~Spinlock(){
+        pthread_spin_destroy(&m_mutex);
+    }
+
+    void lock(){
+        pthread_spin_lock(&m_mutex);
+    }
+
+    void unlock(){
+        pthread_spin_unlock(&m_mutex);
+    }
+private:
+    pthread_spinlock_t m_mutex;
+};
+#endif
+
+class CASLock : Noncopyable{
+public:
+    typedef ScopedLockImpl<CASLock> Lock;
+    CASLock(){
+        m_mutex.clear();
+    }
+
+    ~CASLock(){
+
+    }
+
+    void lock(){
+        while(std::atomic_flag_test_and_set_explicit(&m_mutex, std::memory_order_acquire));
+    }
+
+    void unlock(){
+        std::atomic_flag_clear_explicit(&m_mutex, std::memory_order_release);
+    }
+private:
+    volatile std::atomic_flag m_mutex;
 };
 
 class Thread{
