@@ -8,6 +8,7 @@
 #include <pthread.h>
 #include <semaphore.h>
 
+#include "noncopyable.h"
 
 namespace sylar
 {
@@ -61,9 +62,26 @@ private:
 
 class Mutex{
 public:
+    typedef ScopedLockImpl<Mutex> Lock;
+    Mutex(){
+        pthread_mutex_init(&m_mutex, nullptr);
+    }
+
+    ~Mutex(){
+        pthread_mutex_destroy(&m_mutex);
+    }
+
+    void lock(){
+        pthread_mutex_lock(&m_mutex);
+    }
+
+    void unlock(){
+        pthread_mutex_unlock(&m_mutex);
+    }
+
 
 private:
-    // pthread_lock_t m_lock;
+    pthread_mutex_t m_mutex;
 };
 
 template<class T>
@@ -126,7 +144,16 @@ private:
     bool m_locked;
 };
 
-class RWMutex{
+class NullMutex : Noncopyable{
+public:
+    typedef ScopedLockImpl<NullMutex> Lock;
+    NullMutex(){}
+    ~NullMutex(){}
+    void lock(){}
+    void unlock(){}
+};
+
+class RWMutex : Noncopyable{
 public:
     typedef ReadScopedLockImpl<RWMutex> ReadLock;
     typedef WriteScopedLockImpl<RWMutex> WriteLock;
@@ -152,6 +179,18 @@ public:
     }
 private:
     pthread_rwlock_t m_lock;
+};
+
+
+class NullRWMutex : Noncopyable{
+public:
+    typedef ScopedLockImpl<NullMutex> ReadLock;
+    typedef ScopedLockImpl<NullMutex> WriteLock;
+    NullRWMutex(){}
+    ~NullRWMutex(){}
+    void rdlock(){}
+    void wrlock(){}
+    void unlock(){}   
 };
 
 class Thread{
