@@ -2,4 +2,10 @@
 ## 已完成部分
 + log
 + config
-+ thread[开始]
++ thread & mutex
++ ucontext_t [开始]
++ util marco[未开始]
+
+
+## 待解决问题
++ root日志会输出两次
