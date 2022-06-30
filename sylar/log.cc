@@ -146,6 +146,14 @@ public:
     }
 };
 
+class ThreadNameFormatItem : public LogFormatter::FormatItem{
+public:
+    ThreadNameFormatItem(const std::string& str = "") {}
+    void format(std::ostream& os, std::shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) override {
+        os << event->getThreadName();
+    }
+};
+
 class DateTimeFormatItem : public LogFormatter::FormatItem{
 public:
     DateTimeFormatItem(const std::string& format = "%Y-%m-%d %H:%M:%S"):m_format(format){
@@ -212,13 +220,14 @@ private:
     std::string m_string;
 };
 
-LogEvent::LogEvent(std::shared_ptr<Logger> logger, LogLevel::Level level, const char* file, int32_t line, uint32_t elapse, uint32_t thread_id, uint32_t fiber_id, uint64_t time):
+LogEvent::LogEvent(std::shared_ptr<Logger> logger, LogLevel::Level level, const char* file, int32_t line, uint32_t elapse, uint32_t thread_id, uint32_t fiber_id, uint64_t time, const std::string& thread_name):
     m_file(file),
     m_line(line),
     m_elapse(elapse),
     m_threadId(thread_id),
     m_fiberId(fiber_id),
     m_time(time),
+    m_threadName(thread_name),
     m_logger(logger),
     m_level(level){
        // << "logger name " << logger->getName() << std::endl;
@@ -226,7 +235,7 @@ LogEvent::LogEvent(std::shared_ptr<Logger> logger, LogLevel::Level level, const 
 }
 
 Logger::Logger(const std::string& name):m_name(name),m_level(LogLevel::DEBUG){
-    m_formatter.reset(new LogFormatter("%d{%Y-%m-%d %H:%M:%S}%T%t%T%F%T[%p]%T[%c]%T%f:%l%T%m%n"));
+     m_formatter.reset(new LogFormatter("%d{%Y-%m-%d %H:%M:%S}%T%t%T%N%T%F%T[%p]%T[%c]%T%f:%l%T%m%n"));
     //std::cout << name << " Logger cr " << std::endl;
 }
 
@@ -264,6 +273,7 @@ void Logger::addAppender(LogAppender::ptr appender){
         MutexType::Lock ll(appender->m_mutex);
         appender->m_formatter = m_formatter;
     }
+    // std::cout << "bbbbbb" << std::endl;
     m_appenders.push_back(appender);
 }
 
@@ -284,6 +294,8 @@ void Logger::log(LogLevel::Level level, LogEvent::ptr event){
         MutexType::Lock lock(m_mutex);        
         if(!m_appenders.empty()){
             for(auto& i : m_appenders){
+                // std::cout << "aaaa " << m_appenders.size()<<  std::endl;
+
                 i->log(self, level, event);
             }
         }else if(m_root){
@@ -490,6 +502,7 @@ void LogFormatter::init(){
         XX(l, LineFormatItem),              //l:行号
         XX(T, TabFormatItem),               //T:Tab
         XX(F, FiberIdFormatItem),           //F:协程id
+        XX(N, ThreadNameFormatItem),        //N:线程名称
 #undef XX
     };
 
@@ -683,7 +696,7 @@ struct LogIniter{
     LogIniter(){
         g_log_defines->addListener([](const std::set<LogDefine>& old_value,
                 const std::set<LogDefine>& new_value){
-                    // std::cout << "fffffffffffffffff" << std::endl;
+                    std::cout << "fffffffffffffffff" << std::endl;
             SYLAR_LOG_INFO(SYLAR_LOG_ROOT()) << "on_logger_conf_changed";
             //新增
             for (auto& i : new_value) {

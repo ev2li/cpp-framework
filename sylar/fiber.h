@@ -42,6 +42,13 @@ public:
     void swapOut();
 
     uint64_t getId() const { return m_id; }
+
+    /**
+     * @brief 返回协程状态
+     */
+    State getState() const { return m_state;}
+
+    void setState(State s){ this->m_state = s;}
 public:
     /**
      * @brief 设置当前线程的运行协程
@@ -74,6 +81,7 @@ public:
     static void MainFunc();
 
     static uint64_t GetFiberId();
+
 private:
     uint64_t m_id = 0;
     uint32_t m_stacksize = 0;;
