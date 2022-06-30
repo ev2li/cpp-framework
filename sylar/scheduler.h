@@ -8,7 +8,6 @@
 #include <list>
 
 namespace sylar{
-    
 class Scheduler {
 public:
     typedef std::shared_ptr<Scheduler> ptr;

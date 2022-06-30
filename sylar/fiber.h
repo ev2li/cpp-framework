@@ -5,10 +5,12 @@
 #include "thread.h"
 #include <functional>
 #define _XOPEN_SOURCE 600 
+
 namespace sylar
 {
-
+class Scheduler;
 class Fiber: public std::enable_shared_from_this<Fiber> {
+friend class Scheduler;
 public:
     typedef std::shared_ptr<Fiber> ptr;
 
@@ -48,7 +50,6 @@ public:
      */
     State getState() const { return m_state;}
 
-    void setState(State s){ this->m_state = s;}
 public:
     /**
      * @brief 设置当前线程的运行协程

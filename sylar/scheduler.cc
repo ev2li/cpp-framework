@@ -147,7 +147,7 @@ void Scheduler::run(){
                 schedule(ft.fiber);
             }else if(ft.fiber->getState() != Fiber::TERM 
                     && ft.fiber->getState() != Fiber::EXCEPT){
-                ft.fiber->setState(Fiber::HOLD);
+                ft.fiber->m_state = Fiber::HOLD;
             }
             ft.reset();
         }else if(ft.cb){
@@ -168,7 +168,7 @@ void Scheduler::run(){
                     || cb_fiber->getState() == Fiber::TERM){
                 cb_fiber->reset(nullptr);
             }else if(cb_fiber->getState() != Fiber::TERM){
-                cb_fiber->setState(Fiber::HOLD);
+                cb_fiber->m_state = Fiber::HOLD;
                 cb_fiber.reset();
             }
         }else{
@@ -180,7 +180,7 @@ void Scheduler::run(){
             --m_idleThreadCount;
             if(idle_fiber->getState() != Fiber::TERM
                     || idle_fiber->getState() != Fiber::EXCEPT){
-                idle_fiber->setState(Fiber::HOLD);
+                idle_fiber->m_state = Fiber::HOLD;
             }
         }
     }
