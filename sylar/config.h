@@ -325,7 +325,7 @@ namespace sylar
             return false;
         }
 
-        const T getValue() const { 
+        const T getValue(){ 
             RWMutexType::ReadLock lock(m_mutex);
             return m_val; 
         }

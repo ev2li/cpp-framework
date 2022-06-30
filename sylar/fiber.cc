@@ -116,15 +116,15 @@ void Fiber::swapIn()
     SYLAR_ASSERT(m_state != EXEC);
     m_state = EXEC;
 
-    if(swapcontext(&(*t_threadFiber)->m_ctx, &m_ctx)){
+    if(swapcontext(&t_threadFiber->m_ctx, &m_ctx)){
         SYLAR_ASSERT2(false, "swapcontext");
     }
 }
 
 void Fiber::swapOut()
 {
-    SetThis((*t_threadFiber).get());
-    if(swapcontext(&m_ctx, (*t_threadFiber)->m_ctx)){
+    SetThis(t_threadFiber.get());
+    if(swapcontext(&m_ctx, &t_threadFiber->m_ctx)){
         SYLAR_ASSERT2(false, "swapcontext");       
     }
 }
@@ -171,5 +171,6 @@ uint64_t Fiber::GetFiberId(){
     if(t_fiber){
         return t_fiber->getId();
     }
+    return 0;
 }
 } // namespace sylar
