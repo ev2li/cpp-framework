@@ -7,5 +7,6 @@
 #include "util.h"
 #include "thread.h"
 #include "macro.h"
+#include "fiber.h"
 
 #endif /* __SYLAR_SYLAR_H__ */

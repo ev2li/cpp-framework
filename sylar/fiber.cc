@@ -37,6 +37,7 @@ Fiber::Fiber()
         SYLAR_ASSERT2(false, "getcontext");
     }
     ++s_fiber_count;
+    SYLAR_LOG_DEBUG(g_logger) << "Fiber::Fiber";
 }
 
 
@@ -56,6 +57,7 @@ Fiber::Fiber(std::function<void()>cb, size_t stacksize)
     m_ctx.uc_stack.ss_size = m_stacksize;
 
     makecontext(&m_ctx, &Fiber::MainFunc, 0);
+    SYLAR_LOG_DEBUG(g_logger) << "Fiber::Fiber id=" << m_id;
 }
 
 Fiber::~Fiber()
@@ -74,6 +76,7 @@ Fiber::~Fiber()
     if(cur == this){
         SetThis(nullptr);
     }
+    SYLAR_LOG_DEBUG(g_logger) << "Fiber::~Fiber id = " << m_id;
 }
 
 void Fiber::SetThis(Fiber* f)
