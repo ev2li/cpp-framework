@@ -696,7 +696,7 @@ struct LogIniter{
     LogIniter(){
         g_log_defines->addListener([](const std::set<LogDefine>& old_value,
                 const std::set<LogDefine>& new_value){
-                    std::cout << "fffffffffffffffff" << std::endl;
+                    // std::cout << "fffffffffffffffff" << std::endl;
             SYLAR_LOG_INFO(SYLAR_LOG_ROOT()) << "on_logger_conf_changed";
             //新增
             for (auto& i : new_value) {

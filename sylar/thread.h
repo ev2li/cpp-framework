@@ -6,7 +6,11 @@
 #include <memory>
 #include <string>
 #include <pthread.h>
+#ifdef __APPLE__
+#include <dispatch/dispatch.h>
+#else
 #include <semaphore.h>
+#endif
 #include <atomic>
 
 #include "noncopyable.h"
@@ -27,7 +31,11 @@ private:
     Semaphore& operator=(const Semaphore&) = delete;
 
 private:
-    sem_t m_semaphore;
+#ifdef __APPLE__
+    dispatch_semaphore_t    m_semaphore;
+#else
+    sem_t                   m_semaphore;
+#endif
 };    
 
 
