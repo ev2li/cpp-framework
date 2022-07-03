@@ -36,6 +36,7 @@ set(LIB_SRC
     sylar/util.cc
     sylar/scheduler.cc
     sylar/iomanager.cc
+    sylar/timer.cc
     )
 
 set(LIBS

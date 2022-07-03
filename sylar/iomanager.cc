@@ -275,9 +275,17 @@ void IOManager::tickle()
 
 bool IOManager::stopping()
 {
-    return Scheduler::stopping()
-        && m_pendingEventCount == 0;  
+    uint64_t timeout = 0;
+    return stopping(timeout);
 }
+
+bool IOManager::stopping(uint64_t& timeout){
+    timeout = getNextTimer();
+    return timeout == ~0ull
+            && m_pendingEventCount == 0
+            && Scheduler::stopping();
+}
+
 
 void IOManager::idle() {
     SYLAR_LOG_DEBUG(g_logger) << "idle";
@@ -378,6 +386,10 @@ void IOManager::idle() {
 
         raw_ptr->swapOut();
     }
+}
+
+void IOManager::onTimerInsertedAtFront(){
+    tickle();
 }
 
 void IOManager::contextResize(size_t size)

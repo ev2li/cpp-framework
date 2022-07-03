@@ -86,6 +86,7 @@ public:
             MutexType::Lock lock(m_mutex);
             while(begin() != end){
                 need_tickle = scheduleNoLock(&*begin) || need_tickle;
+                ++begin;
             }
         }
         if(need_tickle){

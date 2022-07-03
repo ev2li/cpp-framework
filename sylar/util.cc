@@ -52,4 +52,22 @@ std::string BacktraceToString(int size, int skip, const std::string& prefix){
     return ss.str();
 }
 
+/**
+ * @brief 获取当前时间的毫秒
+ */
+uint64_t GetCurrentMS(){
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    return tv.tv_sec * 1000ul  + tv.tv_usec / 1000;
+}
+
+/**
+ * @brief 获取当前时间的微秒
+ */
+uint64_t GetCurrentUS(){
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    return tv.tv_sec * 1000 * 1000ul + tv.tv_usec / 1000;
+}
+
 } // namespace sylar
