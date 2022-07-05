@@ -144,4 +144,3 @@ typedef Singleton<FdManager> FdMgr;
 }
 
 #endif
-Footer
