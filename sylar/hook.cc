@@ -16,7 +16,8 @@ sylar::Logger::ptr g_logger = SYLAR_LOG_NAME("system");
 
 namespace sylar
 {
-
+static sylar::ConfigVar<int>::ptr g_tcp_connect_timeout = 
+        sylar::Config::Lookup("tcp.connect.timeout", 5000, "tcp connect timeout");
 static thread_local bool t_hook_enable = false;
 
 #define HOOK_FUN(XX) \
@@ -52,10 +53,17 @@ void hook_init(){
 #undef XX
 }
 
+static uint64_t s_connect_timeout = -1;
 struct _HookIniter
 {
     _HookIniter(){
         hook_init();
+        s_connect_timeout = g_tcp_connect_timeout->getValue(); 
+        g_tcp_connect_timeout->addListener([](const int& old_value, const int& new_value){
+            SYLAR_LOG_INFO(g_logger) << "tcp connect timeout changed from" 
+                     << old_value  << " to"  << new_value;
+            s_connect_timeout = new_value;         
+        });
     }
 };
 
@@ -81,7 +89,7 @@ static ssize_t do_io(int fd, OriginFun fun, const char* hook_fun_name,
     if(!sylar::t_hook_enable){
         return fun(fd, std::forward<Args>(args)...);
     }
-
+    SYLAR_LOG_INFO(g_logger) << "do_io <" << hook_fun_name << ">";
     sylar::FdCtx::ptr ctx = sylar::FdMgr::GetInstance()->get(fd);
     if(!ctx){
         return fun(fd, std::forward<Args>(args)...);
@@ -273,7 +281,7 @@ int connect_with_timeout(int fd, const struct sockaddr *addr, socklen_t addrlen,
 }
 
 int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen){
-
+    return connect_with_timeout(sockfd, addr, addrlen, sylar::s_connect_timeout);
 }
 
 int accept(int s, struct sockaddr *addr, socklen_t *addrlen){
