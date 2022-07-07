@@ -45,6 +45,7 @@ public:
 class IPv4Address : public IPAddress{
 public:
     typedef std::shared_ptr<IPv4Address> ptr;
+    IPv4Address(const sockaddr_in& address);
     IPv4Address(uint32_t address = INADDR_ANY, uint32_t port = 0);
 
     const sockaddr* getAddr() const override;
@@ -63,11 +64,12 @@ private:
 
 class IPv6Address : public  IPAddress{
 public:
-    typedef std::shared_ptr<IPv4Address> ptr;
+    typedef std::shared_ptr<IPv6Address> ptr;
     /**
      * @brief 无参构造函数
      */
     IPv6Address();
+    IPv6Address(const sockaddr_in6& address);
     IPv6Address(const uint8_t address[16], uint16_t port = 0);
 
     const sockaddr* getAddr() const override;

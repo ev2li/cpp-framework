@@ -4,6 +4,11 @@
 
 namespace sylar {
 
+template <class T>
+static T CreateMask(uint32_t bits){
+    return (1 << (sizeof(T) * 8 - bits)) - 1;
+}
+
 int Address::getFamily() const
 {
     return getAddr()->sa_family;
@@ -42,6 +47,10 @@ bool Address::operator!=(const Address& rhs) const
     return !(*this == rhs);
 }
 
+IPv4Address::IPv4Address(const sockaddr_in& address){
+    m_addr = address;
+}
+
 IPv4Address::IPv4Address(uint32_t address, uint32_t port)
 {
     memset(&m_addr, 0, sizeof(m_addr));
@@ -78,16 +87,29 @@ IPAddress::ptr IPv4Address::broadcastAddress(uint32_t prefix_len)
         return nullptr;
     }
     sockaddr_in baddr(m_addr);
+    baddr.sin_addr.s_addr |= byteswapOnLittleEndian(CreateMask<uint32_t>(prefix_len));
+    return IPv4Address::ptr(new IPv4Address(baddr));
 }
 
 IPAddress::ptr IPv4Address::networkAddress(uint32_t prefix_len)
 {
-    
+    if(prefix_len > 32) {
+        return nullptr;
+    }
+
+    sockaddr_in baddr(m_addr);
+    baddr.sin_addr.s_addr &= byteswapOnLittleEndian(
+            CreateMask<uint32_t>(prefix_len));
+    return IPv4Address::ptr(new IPv4Address(baddr));
 }
 
 IPAddress::ptr IPv4Address::subnetMask(uint32_t prefix_len)
 {
-    
+    sockaddr_in subnet;
+    memset(&subnet, 0, sizeof(subnet));
+    subnet.sin_family = AF_INET;
+    subnet.sin_addr.s_addr = ~byteswapOnLittleEndian(CreateMask<uint32_t>(prefix_len));
+    return IPv4Address::ptr(new IPv4Address(subnet)); 
 }
 
 uint32_t IPv4Address::getPort() const 
@@ -104,6 +126,10 @@ IPv6Address::IPv6Address()
 {
     memset(&m_addr, 0, sizeof(m_addr));
     m_addr.sin6_family = AF_INET6;
+}
+
+IPv6Address::IPv6Address(const sockaddr_in6& address) {
+    m_addr = address;
 }
 
 IPv6Address::IPv6Address(const uint8_t address[16], uint16_t port)
@@ -154,19 +180,37 @@ std::ostream& IPv6Address::insert(std::ostream& os) const
 
 IPAddress::ptr IPv6Address::broadcastAddress(uint32_t prefix_len)
 {
-    
+    sockaddr_in6 baddr(m_addr);
+    baddr.sin6_addr.s6_addr[prefix_len / 8] |= 
+        CreateMask<uint8_t>(prefix_len % 8);
+
+    for (int i = prefix_len / 8 + 1; i < 16; i++) {
+        baddr.sin6_addr.s6_addr[i] = 0xff;
+    }
+    return IPv6Address::ptr(new IPv6Address(baddr));
 }
 
 
 IPAddress::ptr IPv6Address::networkAddress(uint32_t prefix_len)
 {
-    
+    sockaddr_in6 baddr(m_addr);
+    baddr.sin6_addr.s6_addr[prefix_len / 8] |= 
+        CreateMask<uint8_t>(prefix_len % 8);
+    return IPv6Address::ptr(new IPv6Address(baddr));
 }
 
 
 IPAddress::ptr IPv6Address::subnetMask(uint32_t prefix_len)
 {
-    
+    sockaddr_in6 subnet;
+    memset(&subnet, 0, sizeof(subnet));
+    subnet.sin6_family = AF_INET6;
+    subnet.sin6_addr.s6_addr[prefix_len / 8] |= 
+        CreateMask<uint8_t>(prefix_len % 8);
+    for(uint32_t i = 0; i < prefix_len / 8; ++i) {
+        subnet.sin6_addr.s6_addr[i] = 0xff;
+    }
+    return IPv6Address::ptr(new IPv6Address(subnet));
 }
 
 
@@ -269,14 +313,17 @@ UnknownAddress::UnknownAddress(const sockaddr& addr) {
 }
 
 
-socklen_t UnknownAddress::getAddrLen() const 
-{
-    
+sockaddr* UnknownAddress::getAddr() {
+    return (sockaddr*)&m_addr;
 }
 
-std::ostream& UnknownAddress::insert(std::ostream& os) const 
-{
-    
+const sockaddr* UnknownAddress::getAddr() const {
+    return &m_addr;
+}
+
+std::ostream& UnknownAddress::insert(std::ostream& os) const {
+    os << "[UnknownAddress family=" << m_addr.sa_family << "]";
+    return os;
 }
 
 } /*end ns sylar*/
