@@ -1,3 +1,11 @@
+/**
+ * @file address.h
+ * @brief 网络地址的封装(IPv4,IPv6,Unix)
+ * @author sylar.yin
+ * @email 564628276@qq.com
+ * @date 2019-06-05
+ * @copyright Copyright (c) 2019年 sylar.yin All rights reserved (www.sylar.top)
+ */
 #ifndef __SYLAR_ADDRESS_H__
 #define __SYLAR_ADDRESS_H__
 
@@ -17,6 +25,9 @@ namespace sylar {
 class Address{
 public:
     typedef std::shared_ptr<Address> ptr;
+    static Address::ptr Create(const sockaddr* addr, socklen_t addrlen);
+    static bool Lookup(std::vector<Address::ptr>& result, const std::string& host,
+            int family = AF_UNSPEC, int type = 0, int protocol = 0);
     virtual ~Address();
 
     int getFamily() const;
@@ -33,6 +44,14 @@ public:
 
 class IPAddress : public Address{
 public:
+    /**
+     * @brief 通过域名,IP,服务器名创建IPAddress
+     * @param[in] address 域名,IP,服务器名等.举例: www.sylar.top
+     * @param[in] port 端口号
+     * @return 调用成功返回IPAddress,失败返回nullptr
+     */
+    static IPAddress::ptr Create(const char* address, uint16_t port = 0);
+
     typedef std::shared_ptr<IPAddress> ptr;
     virtual IPAddress::ptr broadcastAddress(uint32_t prefix_len) = 0;
     virtual IPAddress::ptr networkAddress(uint32_t prefix_len)  = 0;
@@ -45,6 +64,7 @@ public:
 class IPv4Address : public IPAddress{
 public:
     typedef std::shared_ptr<IPv4Address> ptr;
+    static IPv4Address::ptr Create(const char* address, uint32_t port = 0);
     IPv4Address(const sockaddr_in& address);
     IPv4Address(uint32_t address = INADDR_ANY, uint32_t port = 0);
 
@@ -66,9 +86,19 @@ class IPv6Address : public  IPAddress{
 public:
     typedef std::shared_ptr<IPv6Address> ptr;
     /**
+     * @brief 通过IPv6地址字符串构造IPv6Address
+     * @param[in] address IPv6地址字符串
+     * @param[in] port 端口号
+     */
+    static IPv6Address::ptr Create(const char* address, uint16_t port = 0);
+    /**
      * @brief 无参构造函数
      */
     IPv6Address();
+    /**
+     * @brief 通过sockaddr_in6构造IPv6Address
+     * @param[in] address sockaddr_in6结构体
+     */
     IPv6Address(const sockaddr_in6& address);
     IPv6Address(const uint8_t address[16], uint16_t port = 0);
 
