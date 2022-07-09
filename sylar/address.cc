@@ -4,7 +4,8 @@
 #include <netdb.h>
 #include <ifaddrs.h>
 #include <stddef.h>
-
+#include <sys/types.h>
+#include <ifaddrs.h>
 #include "endian.h"
 
 namespace sylar {
@@ -13,6 +14,40 @@ template <class T>
 static T CreateMask(uint32_t bits){
     return (1 << (sizeof(T) * 8 - bits)) - 1;
 }
+
+template <class T>
+static uint32_t CountBytes(T value){
+    uint32_t result = 0;
+    for (; value; ++result) {
+        value &= value -1;
+    }
+    return result;
+}
+
+Address::ptr Address::LookupAny(const std::string& host,
+            int family, int type, int protocol){
+    std::vector<Address::ptr> result;
+    if(Lookup(result, host, family, type, protocol)){
+        return result[0];
+    }
+    return nullptr;
+}
+
+
+std::shared_ptr<IPAddress> Address::LookupAnyIPAddress(const std::string& host,
+            int family, int type, int protocol){
+    std::vector<Address::ptr> result;
+    if(Lookup(result, host, family, type, protocol)){
+        for (auto& i : result) {
+            IPAddress::ptr v = std::dynamic_pointer_cast<IPAddress>(i);
+            if(v){
+                return v;
+            }
+        }
+    }
+    return nullptr;
+}
+
 
 bool Address::Lookup(std::vector<Address::ptr>& result, const std::string& host,
             int family, int type, int protocol){
@@ -58,6 +93,90 @@ bool Address::Lookup(std::vector<Address::ptr>& result, const std::string& host,
 
         return false; 
     }
+    next = results;
+    while(next){
+        result.push_back(Create(next->ai_addr, (socklen_t)next->ai_addrlen));
+        next = next->ai_next;
+    }
+    freeaddrinfo(results);
+    return true;
+}
+
+bool Address::GetInterfaceAddresses(std::multimap<std::string
+                    ,std::pair<Address::ptr, uint32_t> >& result,
+                    int family){
+    struct ifaddrs *next, *results;
+    if(getifaddrs(&results) != 0){
+        SYLAR_LOG_ERROR(g_logger) << "Address::GetInterfaceAddresses getifaddrs error"
+             << errno  << " errstr=" << strerror(errno);
+        return false;
+    }
+
+    try{
+        for (next = results; next; next = next->ifa_next) {
+            Address::ptr addr;
+            uint32_t prefix_len = ~0u;
+            if(family != AF_UNSPEC && family != next->ifa_addr->sa_family){
+                continue;
+            }
+            switch (next->ifa_addr->sa_family){
+                case AF_INET:
+                    {
+                        addr = Create(next->ifa_addr, sizeof(sockaddr_in)); 
+                        uint32_t netmask = ((sockaddr_in*) next->ifa_netmask)->sin_addr.s_addr;
+                        prefix_len = CountBytes(netmask); 
+                    }
+                    break;
+                case AF_INET6:
+                    {
+                        addr = Create(next->ifa_addr, sizeof(sockaddr_in6));
+                        in6_addr& netmask = ((sockaddr_in6*)next->ifa_netmask)->sin6_addr;
+                        prefix_len = 0;
+                        for(int i = 0; i < 16; ++i) {
+                            prefix_len += CountBytes(netmask.s6_addr[i]);
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+            if(addr){
+                result.insert(std::make_pair(next->ifa_name, std::make_pair(addr, prefix_len)));
+            }
+        }
+    }catch(const std::exception& e){
+        SYLAR_LOG_ERROR(g_logger) << "Address::GetInterfaceAddresses exception";
+        freeifaddrs(results);
+        return false;
+    }
+    freeifaddrs(results);
+    return !result.empty();
+}
+
+bool Address::GetInterfaceAddresses(std::vector<std::pair<Address::ptr, uint32_t> >&result
+                    ,const std::string& iface, int family) {
+    if(iface.empty() || iface == "*"){
+        if(family == AF_INET || family == AF_UNSPEC){
+            result.push_back(std::make_pair(Address::ptr(new IPv4Address()), 0u));
+        }
+        
+        if(family == AF_INET6 || family == AF_UNSPEC){
+            result.push_back(std::make_pair(Address::ptr(new IPv6Address()), 0u));
+        }
+        return true; 
+    }
+    std::multimap<std::string
+          ,std::pair<Address::ptr, uint32_t> > results;
+
+    if(!GetInterfaceAddresses(results, family)) {
+        return false;
+    }
+
+    auto its  = results.equal_range(iface);
+    for(; its.first != its.second; ++its.first) {
+        result.push_back(its.first->second);
+    }
+    return !result.empty();
 }
 
 int Address::getFamily() const
