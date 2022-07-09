@@ -30,7 +30,10 @@ void test_iface(){
 }
 
 void test_ipv4(){
-    auto addr = sylar::IPAddress::Create("www.sylar.top", 0);
+    auto addr = sylar::IPAddress::Create("127.0.0.8");
+    if(addr){
+        SYLAR_LOG_INFO(g_logger) << addr->toString();
+    }
 
 }
 
