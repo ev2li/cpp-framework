@@ -42,6 +42,7 @@ set(LIB_SRC
     sylar/address.cc
     sylar/socket.cc
     sylar/bytearray.cc
+    sylar/http/http.cc
     )
 
 set(LIBS
@@ -78,6 +79,7 @@ sylar_add_executable(test_hook "tests/test_hook.cc" sylar "${LIBS}")
 sylar_add_executable(test_address "tests/test_address.cc" sylar "${LIBS}")
 sylar_add_executable(test_socket "tests/test_socket.cc" sylar "${LIBS}")
 sylar_add_executable(test_bytearray "tests/test_bytearray.cc" sylar "${LIBS}")
+sylar_add_executable(test_http "tests/test_http.cc" sylar "${LIBS}")
 
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 SET(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
