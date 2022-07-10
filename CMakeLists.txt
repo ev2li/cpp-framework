@@ -43,8 +43,12 @@ set(LIB_SRC
     sylar/socket.cc
     sylar/bytearray.cc
     sylar/http/http.cc
+    sylar/http/http_parser.cc
     )
-
+ragelmaker(sylar/http/http11_parser.rl LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/sylar/http)
+ragelmaker(sylar/http/httpclient_parser.rl LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/sylar/http)
+ragelmaker(sylar/uri.rl LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/sylar)
+    
 set(LIBS
     sylar
     pthread
