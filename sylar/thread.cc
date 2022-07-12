@@ -9,51 +9,6 @@ static thread_local std::string t_thread_name = "UNKONW";
 static sylar::Logger::ptr g_logger = SYLAR_LOG_NAME("system");
 
 
-Semaphore::Semaphore(uint32_t count){
-#ifdef __APPLE__
-    dispatch_semaphore_create(count);
-#else
-    sem_init(&s->sem, 0, value);
-    if(sem_init(&m_semaphore, 0, count)){
-        throw std::logic_error("sem_init error");
-    }
-#endif
-}
-
-Semaphore::~Semaphore(){
-#ifdef __APPLE__
-    dispatch_release(m_semaphore);
-#else
-    sem_destroy(&m_semaphore);
-#endif
-}
-
-void Semaphore::wait(){
-#ifdef __APPLE__
-    //std::cout << "ccccccc" << std::endl;
-    dispatch_semaphore_wait(m_semaphore, DISPATCH_TIME_FOREVER);
-    //std::cout << "bbbbbbbbb" << std::endl;
-#else
-    while (true){
-        if(!sem_wait(&m_semaphore)){
-            throw std::logic_error("sem_wait error");
-        }
-    }
-#endif
-//std::cout << "dddddddddd" << std::endl;
-}
-
-void Semaphore::notify(){
-#ifdef __APPLE__
-    dispatch_semaphore_signal(m_semaphore);
-#else
-    if(sem_post(&m_semaphore)){
-        throw std::logic_error("sem_post error");
-    }
-#endif
-
-}
-
 Thread* Thread::GetThis(){
     return t_thread;
 }
